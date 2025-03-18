@@ -41,34 +41,47 @@ export default function MainLayout() {
                                     path="/analytics"
                                     element={<Analytics />}
                                 />
-                                <Route
-                                    path="/products"
-                                    element={<Products />}
-                                />
                                 <Route 
                                     path="/sales" 
                                     element={<Sales />} 
                                 />
                                 <Route
-                                    path="/payments"
-                                    element={<Payments />}
-                                />
-                                <Route 
-                                    path="/refunds" 
-                                    element={<Refunds />} 
-                                />
-                                <Route
-                                    path="/invoices"
-                                    element={<Invoices />}
-                                />
-                                <Route 
-                                    path="/returns" 
-                                    element={<Returns />} 
+                                    path="/products"
+                                    element={<Products />}
                                 />
                                 <Route 
                                     path="/products/add" 
                                     element={<AddProducts />} 
                                 />
+                                <Route 
+                                    path="/inventory" 
+                                    // element={<Inventory />} 
+                                />
+                                <Route
+                                    path="/bills"
+                                    element={<Payments />}
+                                />
+                                <Route
+                                    path="/paybills"
+                                    // element={<Payments />}
+                                />
+                                <Route
+                                    path="/invoices"
+                                    element={<Invoices />}
+                                />
+                                <Route
+                                    path="/receive-payments"
+                                    // element={<Invoices />}
+                                />
+                                <Route 
+                                    path="/refunds" 
+                                    element={<Refunds />} 
+                                />
+                                <Route 
+                                    path="/returns" 
+                                    element={<Returns />} 
+                                />
+                                
                             </Routes>
                         </Suspense>
                     </div>

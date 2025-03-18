@@ -16,6 +16,10 @@ import {
     ToggleLeft,
     TicketSlash,
     RotateCcwSquareIcon,
+    ReceiptIcon,
+    CreditCard,
+    TrendingUp,
+    Warehouse,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -44,8 +48,9 @@ export default function Sidebar() {
                             {[
                                 { icon: <LayoutDashboard size={24} />, label: "Overview", link: '/' },
                                 { icon: <ChartSpline size={24} />, label: "Analytics", link: '/analytics' },
+                                { icon: <TrendingUp size={24} />, label: "Sales", link: '/sales' },
                                 { icon: <Store size={24} />, label: "Products", link: '/products' },
-                                { icon: <ShoppingCart size={24} />, label: "Sales", link: '/sales' },
+                                { icon: <Warehouse size={24} />, label: "Inventory", link: '/inventory' },
                             ].map((item, index) => (
                                 <li
                                     key={index}
@@ -68,10 +73,12 @@ export default function Sidebar() {
                         </h4>
                         <ul className="flex flex-col gap-4">
                             {[
-                                { icon: <Wallet size={24} />, label: "Payment", link: '/payments' },
-                                { icon: <TicketSlash size={24} />, label: "Refunds", link: '/refunds' },
+                                { icon: <ReceiptIcon size={24} />, label: "Bills", link: '/bills' },
+                                { icon: <CreditCard size={24} />, label: "Pay Bills", link: '/paybills' },
                                 { icon: <ReceiptText size={24} />, label: "Invoices", link: '/invoices' },
-                                { icon: <RotateCcwSquareIcon size={24} />, label: "Returns", link: '/returns' },
+                                { icon: <CreditCard size={24} />, label: "Receive Payments", link: '/receive-payments' },
+                                // { icon: <TicketSlash size={24} />, label: "Refunds", link: '/refunds' },
+                                // { icon: <Package size={24} />, label: "Returns", link: '/returns' },
                             ].map((item, index) => (
                                 <li
                                     key={index}

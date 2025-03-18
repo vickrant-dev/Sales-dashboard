@@ -1,20 +1,34 @@
-import { createClient } from '@supabase/supabase-js'
 import { ChevronDown, Pencil, Plus, Settings2, Trash } from 'lucide-react';
 import '../App.css'
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { data, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { supabase } from '../utils/supabase';
 
 export default function Products() {
 
-    // const supabase = createClient('SUPABASE_URL', 'SUPABASE_ANON_KEY')
-
     const navigate = useNavigate();
+
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const { data, error } = await supabase
+                .from("products")
+                .select("*");
+            if (error) {
+                console.error("Error fetching inventory:", error.message);
+            } else {
+                setProducts(data);
+            }
+        };
+        fetchProducts();
+    }, []);
 
     return (
         <>
             <div className="overflow-x-auto mt-10">
                 <div className="heading pl-[16px]">
-                    <h2 className='text-2xl font-semibold'>Products</h2>
+                    <h2 className="text-2xl font-semibold">Products</h2>
                 </div>
                 <div className="product-content">
                     <div className="header pb-7 pt-5 mt-5 pr-[16px] pl-[16px] w-full flex items-center justify-between">
@@ -49,7 +63,10 @@ export default function Products() {
                                     className="btn gap-2 font-normal bg-base-100"
                                 >
                                     Select Category{" "}
-                                    <ChevronDown className="mt-[1px]" size={20} />
+                                    <ChevronDown
+                                        className="mt-[1px]"
+                                        size={20}
+                                    />
                                 </div>
                                 <ul
                                     tabIndex={0}
@@ -65,7 +82,10 @@ export default function Products() {
                             </div>
                         </div>
                         <div id="add-new-pro">
-                            <button className="btn btn-primary" onClick={() => navigate('/products/add')} >
+                            <button
+                                className="btn btn-primary"
+                                onClick={() => navigate("/products/add")}
+                            >
                                 <Plus size={20} />
                                 Add New Product
                             </button>
@@ -86,137 +106,48 @@ export default function Products() {
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>Cateogory</th>
-                                <th>Buying Price</th>
+                                <th>Description</th>
+                                <th>Unit Price</th>
                                 <th>Stock</th>
-                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody className=' bg-base-200'>
-                            {/* row 1 */}
-                            <tr>
-                                <th>
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            className="checkbox rounded-lg"
-                                        />
-                                    </label>
-                                </th>
-                                <td>1001</td>
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div>
-                                            <div
-                                                className="font-bold"
-                                                id="pro-name"
-                                            >
-                                                MEN'S NIKE AIR MAX
+                        <tbody className=" bg-base-200">
+                            {products.map((product) => (
+                                <tr>
+                                    <th>
+                                        <label>
+                                            <input
+                                                type="checkbox"
+                                                className="checkbox rounded-lg"
+                                            />
+                                        </label>
+                                    </th>
+                                    <td>{product.id}</td>
+                                    <td>
+                                        <div className="flex items-center gap-3">
+                                            <div>
+                                                <div
+                                                    className="font-bold"
+                                                    id="pro-name"
+                                                >
+                                                    {product.product_name}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>Fashion</td>
-                                <td>$25.00</td>
-                                <td>21</td>
-                                <td><div className="badge bg-green-700/45 text-green-400">In Stock</div></td>
-                                <td>
-                                    <Settings2 size={20} className="cursor-pointer" />
-                                </td>
-                            </tr>
-                            {/* row 2 */}
-                            <tr>
-                                <th>
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            className="checkbox rounded-lg"
+                                    </td>
+                                    <td>{product.category ? product.category : "N/A"}</td>
+                                    <td>{product.product_desc ? product.product_desc : "N/A"}</td>
+                                    <td>LKR {product.unit_price}</td>
+                                    <td>{product.stock_quantity ? product.stock_quantity : 0}</td>
+                                    <td>
+                                        <Settings2
+                                            size={20}
+                                            className="cursor-pointer"
                                         />
-                                    </label>
-                                </th>
-                                <td>1001</td>
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div>
-                                            <div
-                                                className="font-bold"
-                                                id="pro-name"
-                                            >
-                                                MEN'S NIKE AIR MAX
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Fashion</td>
-                                <td>$25.00</td>
-                                <td>4</td>
-                                <td><div className="badge bg-yellow-700/45 text-yellow-400">Low Stock</div></td>
-                                <td>
-                                    <Settings2 size={20} className="cursor-pointer" />
-                                </td>
-                            </tr>
-                            {/* row 3 */}
-                            <tr>
-                                <th>
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            className="checkbox rounded-lg"
-                                        />
-                                    </label>
-                                </th>
-                                <td>1001</td>
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div>
-                                            <div
-                                                className="font-bold"
-                                                id="pro-name"
-                                            >
-                                                MEN'S NIKE AIR MAX
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Fashion</td>
-                                <td>$25.00</td>
-                                <td>0</td>
-                                <td><div className="badge bg-red-700/45 text-red-400">Out of stock</div></td>
-                                <td>
-                                    <Settings2 size={20} className="cursor-pointer" />
-                                </td>
-                            </tr>
-                            {/* row 4 */}
-                            <tr>
-                                <th>
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            className="checkbox rounded-lg"
-                                        />
-                                    </label>
-                                </th>
-                                <td>1001</td>
-                                <td>
-                                    <div className="flex items-center gap-3">
-                                        <div>
-                                            <div
-                                                className="font-bold"
-                                                id="pro-name"
-                                            >
-                                                MEN'S NIKE AIR MAX
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Fashion</td>
-                                <td>$25.00</td>
-                                <td>21</td>
-                                <td><div className="badge bg-green-700/45 text-green-400">In Stock</div></td>
-                                <td>
-                                    <Settings2 size={20} className="cursor-pointer" />
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
