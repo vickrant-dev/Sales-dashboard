@@ -1,4 +1,4 @@
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import "../App.css";
 import {
     EllipsisVertical,
@@ -21,6 +21,7 @@ import {
 export default function Sidebar() {
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     return (
         <>
@@ -48,9 +49,9 @@ export default function Sidebar() {
                             ].map((item, index) => (
                                 <li
                                     key={index}
-                                    className="select-none group flex items-center gap-3 rounded-xl py-3.25 pl-3.5 
-                                    cursor-pointer hover:bg-primary hover:text-primary-content 
-                                    transition-all duration-150 ease-out"
+                                    className={`select-none group flex items-center gap-3 rounded-xl py-3.25 pl-3.5 
+                                    cursor-pointer transition-all duration-150 ease-out
+                                    ${location.pathname === item.link ? "bg-primary text-primary-content" : "hover:bg-primary hover:text-primary-content"}`}
                                     onClick={() => navigate(item.link)} 
                                 >
                                     <div id="icon">{item.icon}</div>
@@ -74,9 +75,9 @@ export default function Sidebar() {
                             ].map((item, index) => (
                                 <li
                                     key={index}
-                                    className="select-none group flex items-center gap-3 rounded-xl py-3.25 pl-3.5 
+                                    className={`select-none group flex items-center gap-3 rounded-xl py-3.25 pl-3.5 
                                     cursor-pointer hover:bg-primary hover:text-primary-content 
-                                    transition-all duration-150 ease-out"
+                                    transition-all duration-150 ease-out ${location.pathname === item.link ? "bg-primary text-primary-content" :  "hover:bg-primary hover:text-primary-content"} `}
                                     onClick={() => navigate(item.link)}
                                 >
                                     <div id="icon">{item.icon}</div>
@@ -93,16 +94,16 @@ export default function Sidebar() {
                         </h4>
                         <ul className="flex flex-col gap-4">
                             {[
-                                { icon: <BellRing size={24} />, label: "Notifications" },
-                                { icon: <MessageCircle size={24} />, label: "Feedback" },
+                                // { icon: <BellRing size={24} />, label: "Notifications" },
+                                // { icon: <MessageCircle size={24} />, label: "Feedback" },
                                 { icon: <Settings size={24} />, label: "Settings" },
-                                { icon: <ToggleLeft size={24} />, label: "Darkmode" },
+                                // { icon: <ToggleLeft size={24} />, label: "Darkmode" },
                             ].map((item, index) => (
                                 <li
                                     key={index}
-                                    className="select-none group flex items-center gap-3 rounded-xl py-3.25 pl-3.5 
+                                    className={`select-none group flex items-center gap-3 rounded-xl py-3.25 pl-3.5 
                                     cursor-pointer hover:bg-primary hover:text-primary-content 
-                                    transition-all duration-150 ease-out"
+                                    transition-all duration-150 ease-out ${location.pathname === item.link ? "bg-primary text-primary-content" : "hover:bg-primary hover:text-primary-content"} `}
                                 >
                                     <div id="icon">{item.icon}</div>
                                     <p>{item.label}</p>
@@ -113,7 +114,6 @@ export default function Sidebar() {
                 </div>
             </div>
         </>
-    );    
-    
+    );
     
 }

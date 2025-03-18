@@ -1,10 +1,14 @@
 import { createClient } from '@supabase/supabase-js'
-import { ChevronDown, Pencil, Plus, Trash } from 'lucide-react';
+import { ChevronDown, Pencil, Plus, Settings2, Trash } from 'lucide-react';
 import '../App.css'
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
-export default function Products() {   
+export default function Products() {
 
-    const supabase = createClient('SUPABASE_URL', 'SUPABASE_ANON_KEY')
+    // const supabase = createClient('SUPABASE_URL', 'SUPABASE_ANON_KEY')
+
+    const navigate = useNavigate();
 
     return (
         <>
@@ -61,7 +65,7 @@ export default function Products() {
                             </div>
                         </div>
                         <div id="add-new-pro">
-                            <button className="btn btn-primary">
+                            <button className="btn btn-primary" onClick={() => navigate('/products/add')} >
                                 <Plus size={20} />
                                 Add New Product
                             </button>
@@ -116,15 +120,8 @@ export default function Products() {
                                 <td>$25.00</td>
                                 <td>21</td>
                                 <td><div className="badge bg-green-700/45 text-green-400">In Stock</div></td>
-                                <td className="flex items-center gap-3">
-                                    <Pencil
-                                        size={34}
-                                        className="text-neutral-200 p-1.75 hover:bg-base-300 rounded-md cursor-pointer"
-                                    />
-                                    <Trash
-                                        className="text-red-500 p-1.75 hover:bg-red-700/40 rounded-md cursor-pointer"
-                                        size={34}
-                                    />
+                                <td>
+                                    <Settings2 size={20} className="cursor-pointer" />
                                 </td>
                             </tr>
                             {/* row 2 */}
@@ -154,15 +151,8 @@ export default function Products() {
                                 <td>$25.00</td>
                                 <td>4</td>
                                 <td><div className="badge bg-yellow-700/45 text-yellow-400">Low Stock</div></td>
-                                <td className="flex items-center gap-3">
-                                    <Pencil
-                                        size={34}
-                                        className="text-neutral-200 p-1.75 hover:bg-base-300 rounded-md cursor-pointer"
-                                    />
-                                    <Trash
-                                        className="text-red-500 p-1.75 hover:bg-red-700/40 rounded-md cursor-pointer"
-                                        size={34}
-                                    />
+                                <td>
+                                    <Settings2 size={20} className="cursor-pointer" />
                                 </td>
                             </tr>
                             {/* row 3 */}
@@ -192,15 +182,8 @@ export default function Products() {
                                 <td>$25.00</td>
                                 <td>0</td>
                                 <td><div className="badge bg-red-700/45 text-red-400">Out of stock</div></td>
-                                <td className="flex items-center gap-3">
-                                    <Pencil
-                                        size={34}
-                                        className="text-neutral-200 p-1.75 hover:bg-base-300 rounded-md cursor-pointer"
-                                    />
-                                    <Trash
-                                        className="text-red-500 p-1.75 hover:bg-red-700/40 rounded-md cursor-pointer"
-                                        size={34}
-                                    />
+                                <td>
+                                    <Settings2 size={20} className="cursor-pointer" />
                                 </td>
                             </tr>
                             {/* row 4 */}
@@ -230,15 +213,8 @@ export default function Products() {
                                 <td>$25.00</td>
                                 <td>21</td>
                                 <td><div className="badge bg-green-700/45 text-green-400">In Stock</div></td>
-                                <td className="flex items-center gap-3">
-                                    <Pencil
-                                        size={34}
-                                        className="text-neutral-200 p-1.75 hover:bg-base-300 rounded-md cursor-pointer"
-                                    />
-                                    <Trash
-                                        className="text-red-500 p-1.75 hover:bg-red-700/40 rounded-md cursor-pointer"
-                                        size={34}
-                                    />
+                                <td>
+                                    <Settings2 size={20} className="cursor-pointer" />
                                 </td>
                             </tr>
                         </tbody>

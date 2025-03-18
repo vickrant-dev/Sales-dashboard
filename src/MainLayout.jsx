@@ -12,6 +12,7 @@ import Payments from "./Components/Payments";
 import Refunds from "./Components/Refunds";
 import Invoices from "./Components/Invoices";
 import Returns from "./Components/Returns";
+import AddProducts from "./Components/AddProduct";
 
 export default function MainLayout() {
 
@@ -63,6 +64,10 @@ export default function MainLayout() {
                                 <Route 
                                     path="/returns" 
                                     element={<Returns />} 
+                                />
+                                <Route 
+                                    path="/products/add" 
+                                    element={<AddProducts />} 
                                 />
                             </Routes>
                         </Suspense>
