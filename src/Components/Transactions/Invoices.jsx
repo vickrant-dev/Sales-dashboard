@@ -17,23 +17,27 @@ import {
     Settings2,
     RefreshCcw,
     TicketX,
+    BookCheck,
+    FileCheck,
+    FileX,
+    Printer,
 } from "lucide-react";
-import "../App.css";
+import "../../App.css";
 
-export default function Returns() {
+export default function Invoices() {
     return (
         <>
-            <div className="returns-container">
+            <div className="invoices-container">
                 <div
                     id="header"
                     className="flex items-center justify-between mt-10"
                 >
                     <div id="section-heading" className="flex flex-col">
                         <h4 className="text-2xl font-semibold pb-[3px]">
-                            Returns
+                            Invoices
                         </h4>
                         <p className="text-md text-neutral-400">
-                            Here is your Returns summary
+                            Here is your Invoices summary
                         </p>
                     </div>
                     <div id="choose-date">
@@ -69,31 +73,31 @@ export default function Returns() {
                 <div className="stats shadow flex items-center w-full mt-7">
                     <div className="stat pl-0">
                         <div className="stat-figure text-secondary">
-                            <TicketSlash
+                            <ReceiptText
                                 className="text-accent bg-accent-content py-1 px-1.5 rounded-3xl"
                                 size={32}
                             />
                         </div>
-                        <div className="stat-title">Total Returns</div>
-                        <div className="stat-value">35</div>
+                        <div className="stat-title">Total Invoiced</div>
+                        <div className="stat-value">$49,000.05</div>
                         <div className="stat-desc flex gap-1">
-                            <ArrowUpRight className="text-red-500" size={17} />{" "}
-                            +5.2% from last month
+                            <ArrowUpRight className="text-neutral-400" size={17} />
+                            +20.1% from last month
                         </div>
                     </div>
 
                     <div className="stat">
                         <div className="stat-figure text-secondary">
-                            <LucideTicketCheck
+                            <FileCheck
                                 className="text-accent bg-accent-content py-1 px-1.5 rounded-3xl"
                                 size={32}
                             />
                         </div>
-                        <div className="stat-title">Approved Returns</div>
-                        <div className="stat-value">24</div>
+                        <div className="stat-title">Paid Invoices</div>
+                        <div className="stat-value">$32,456.78</div>
                         <div className="stat-desc flex gap-1">
-                            <ArrowUpRight className="text-red-500" size={17} />{" "}
-                            +2.5% from last month
+                            <ArrowUpRight className="text-success" size={17} />
+                            +15.3% from last month
                         </div>
                     </div>
 
@@ -104,36 +108,36 @@ export default function Returns() {
                                 size={32}
                             />
                         </div>
-                        <div className="stat-title">Pending Returns</div>
-                        <div className="stat-value">8</div>
-                        <div className="stat-desc flex gap-1">
-                            <ArrowDownRight
-                                className="text-neutral-400"
-                                size={17}
-                            />
-                            -3.1% from last month
-                        </div>
-                    </div>
-
-                    <div className="stat pr-0">
-                        <div className="stat-figure text-secondary">
-                            <TicketX
-                                className="text-accent bg-accent-content py-1 px-1.5 rounded-3xl"
-                                size={32}
-                            />
-                        </div>
-                        <div className="stat-title">Return Rate</div>
-                        <div className="stat-value">2.8%</div>
+                        <div className="stat-title">Pending Invoices</div>
+                        <div className="stat-value">$10,567.32</div>
                         <div className="stat-desc flex gap-1">
                             <ArrowDownRight
                                 className="text-success"
                                 size={17}
                             />
-                            -1.2% from last month
+                            +5.7% from last month
+                        </div>
+                    </div>
+
+                    <div className="stat pr-0">
+                        <div className="stat-figure text-secondary">
+                            <FileX
+                                className="text-accent bg-accent-content py-1 px-1.5 rounded-3xl"
+                                size={32}
+                            />
+                        </div>
+                        <div className="stat-title">Overdue Invoices</div>
+                        <div className="stat-value">$2,207.79</div>
+                        <div className="stat-desc flex gap-1">
+                            <ArrowUpRight
+                                className="text-red-500"
+                                size={17}
+                            />
+                            +2.5% from last month
                         </div>
                     </div>
                 </div>
-                <div className="recent-returns-container mt-7 mb-7">
+                <div className="recent-invoices-container mt-7 mb-7">
                     <div className="header flex items-center justify-between ">
                         <label className="input">
                             <svg
@@ -158,17 +162,25 @@ export default function Returns() {
                                 placeholder="Search"
                             />
                         </label>
-                        <button className="btn btn-soft btn-secondary">
-                            <Download size={18} /> Export
-                        </button>
+                        <div className="invoice-btns flex items-center gap-3">
+                            <button className="btn btn-soft btn-secondary">
+                                <Printer size={18} /> Print
+                            </button>
+                            <button className="btn btn-soft btn-secondary">
+                                <Download size={18} /> Export
+                            </button>
+                            <button className="btn btn-primary">
+                                <ReceiptText size={18} /> New Invoice
+                            </button>
+                        </div>
                     </div>
-                    <div className="recent-returns mt-7 p-4 border border-base-300 rounded-2xl">
+                    <div className="recent-invoices mt-7 p-4 border border-base-300 rounded-2xl">
                         <div className="header">
                             <h4 className="text-xl font-semibold pb-1">
-                                Recent Returns
+                                Invoices
                             </h4>
                             <p className="text-sm text-neutral-400 pb-7">
-                                A list of recent product returns
+                                Manage your customer invoices
                             </p>
                         </div>
                         <div className="overflow-x-auto border border-base-300 rounded-xl">
@@ -180,9 +192,8 @@ export default function Returns() {
                                         <th>ID</th>
                                         <th>Date</th>
                                         <th>Customer</th>
-                                        <th>Order ID</th>
-                                        <th>Product</th>
-                                        <th>Reason</th>
+                                        <th>Due Date</th>
+                                        <th>Amount</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
@@ -190,15 +201,14 @@ export default function Returns() {
                                 <tbody>
                                     {/* row 1 */}
                                     <tr>
-                                        <td>RET-445</td>
+                                        <td>1</td>
                                         <td>2023-04-15</td>
-                                        <td>John Smith</td>
-                                        <td>ORD-5678</td>
-                                        <td>iPhone 13 Pro</td>
-                                        <td>Defective item</td>
+                                        <td>Cy Ganderton</td>
+                                        <td>2023-04-15</td>
+                                        <td>$999.00	</td>
                                         <td>
                                             <div className="badge bg-green-700/45 text-green-400">
-                                                Approved
+                                                Paid
                                             </div>
                                         </td>
                                         <th>
@@ -207,15 +217,14 @@ export default function Returns() {
                                     </tr>
                                     {/* row 2 */}
                                     <tr>
-                                        <td>RET-445</td>
+                                        <td>1</td>
                                         <td>2023-04-15</td>
-                                        <td>John Smith</td>
-                                        <td>ORD-5678</td>
-                                        <td>iPhone 13 Pro</td>
-                                        <td>Defective item</td>
+                                        <td>Cy Ganderton</td>
+                                        <td>2024-04-30</td>
+                                        <td>$999.00	</td>
                                         <td>
-                                            <div className="badge bg-yellow-700/45 text-yellow-400">
-                                                Pending
+                                            <div className="badge bg-red-700/45 text-red-400">
+                                                Overdue
                                             </div>
                                         </td>
                                         <th>
@@ -224,15 +233,14 @@ export default function Returns() {
                                     </tr>
                                     {/* row 3 */}
                                     <tr>
-                                        <td>RET-445</td>
+                                        <td>1</td>
                                         <td>2023-04-15</td>
-                                        <td>John Smith</td>
-                                        <td>ORD-5678</td>
-                                        <td>iPhone 13 Pro</td>
-                                        <td>Defective item</td>
+                                        <td>Cy Ganderton</td>
+                                        <td>2024-04-30</td>
+                                        <td>$999.00	</td>
                                         <td>
-                                            <div className="badge bg-red-700/45 text-red-400">
-                                                Rejected
+                                            <div className="badge bg-yellow-700/45 text-yellow-400">
+                                                Pending
                                             </div>
                                         </td>
                                         <th>

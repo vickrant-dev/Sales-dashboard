@@ -1,39 +1,24 @@
-import {
-    ArrowDownRight,
-    ArrowRight,
-    ArrowUpRight,
-    DollarSign,
-    Package,
-    ReceiptText,
-    Settings,
-    ShoppingBag,
-    ChartSpline,
-    Landmark,
-    LucideTicketCheck,
-    LucideTicketX,
-    RotateCcwSquareIcon,
-    TicketSlash,
-    Download,
-    Settings2,
-    RefreshCcw,
-    TicketX,
-} from "lucide-react";
-import "../App.css";
+import { ArrowDownRight, ArrowRight, ArrowUpRight, DollarSign, Package, ReceiptText,  Settings,  ShoppingBag, ChartSpline, Landmark, LucideTicketCheck, LucideTicketX, RotateCcwSquareIcon, TicketSlash, Download, Settings2, ReceiptIcon, Check, RefreshCcw, CreditCard, Plus, ChevronRight } from 'lucide-react'
+import "../../App.css";
+import { useNavigate } from 'react-router-dom';
 
-export default function Refunds() {
+export default function Bills() {
+
+    const navigate = useNavigate();
+
     return (
         <>
-            <div className="refunds-container">
+            <div className="bills-container">
                 <div
                     id="header"
                     className="flex items-center justify-between mt-10"
                 >
                     <div id="section-heading" className="flex flex-col">
                         <h4 className="text-2xl font-semibold pb-[3px]">
-                            Refunds
+                            Bills
                         </h4>
                         <p className="text-md text-neutral-400">
-                            Here is your Refunds summary
+                            Here is your bills summary
                         </p>
                     </div>
                     <div id="choose-date">
@@ -69,31 +54,31 @@ export default function Refunds() {
                 <div className="stats shadow flex items-center w-full mt-7">
                     <div className="stat pl-0">
                         <div className="stat-figure text-secondary">
-                            <TicketSlash
+                            <ReceiptIcon
                                 className="text-accent bg-accent-content py-1 px-1.5 rounded-3xl"
                                 size={32}
                             />
                         </div>
-                        <div className="stat-title">Total Refunds</div>
-                        <div className="stat-value">$2589</div>
+                        <div className="stat-title">Total Bills</div>
+                        <div className="stat-value">$9,000</div>
                         <div className="stat-desc flex gap-1">
-                            <ArrowUpRight className="text-red-500" size={17} />{" "}
-                            +5.2% from last month
+                            <ArrowUpRight className="text-success" size={17} />{" "}
+                            +20.1% from last month
                         </div>
                     </div>
 
                     <div className="stat">
                         <div className="stat-figure text-secondary">
-                            <LucideTicketCheck
+                            <Check
                                 className="text-accent bg-accent-content py-1 px-1.5 rounded-3xl"
                                 size={32}
                             />
                         </div>
-                        <div className="stat-title">Approved Refunds</div>
-                        <div className="stat-value">21</div>
+                        <div className="stat-title">Paid Bills</div>
+                        <div className="stat-value">1,234</div>
                         <div className="stat-desc flex gap-1">
                             <ArrowUpRight className="text-success" size={17} />{" "}
-                            +2.5% from last month
+                            +15.3% from last month
                         </div>
                     </div>
 
@@ -104,36 +89,36 @@ export default function Refunds() {
                                 size={32}
                             />
                         </div>
-                        <div className="stat-title">Pending Refunds</div>
-                        <div className="stat-value">8</div>
+                        <div className="stat-title">Pending Payments</div>
+                        <div className="stat-value">24</div>
                         <div className="stat-desc flex gap-1">
                             <ArrowDownRight
                                 className="text-success"
                                 size={17}
                             />
-                            -3.1% from last month
+                            -2.5% from last month
                         </div>
                     </div>
 
                     <div className="stat pr-0">
                         <div className="stat-figure text-secondary">
-                            <TicketX
+                            <CreditCard
                                 className="text-accent bg-accent-content py-1 px-1.5 rounded-3xl"
                                 size={32}
                             />
                         </div>
-                        <div className="stat-title">Rejected Refunds</div>
-                        <div className="stat-value">2</div>
+                        <div className="stat-title">Available Credits</div>
+                        <div className="stat-value">$449.50</div>
                         <div className="stat-desc flex gap-1">
                             <ArrowDownRight
                                 className="text-success"
                                 size={17}
                             />
-                            -1.2% from last month
+                            +25.2% from last month
                         </div>
                     </div>
                 </div>
-                <div className="recent-refunds-container mt-7 mb-7">
+                <div className="recent-bills-container mt-7 mb-7">
                     <div className="header flex items-center justify-between ">
                         <label className="input">
                             <svg
@@ -155,22 +140,27 @@ export default function Refunds() {
                             <input
                                 type="search"
                                 required
-                                placeholder="Search"
+                                placeholder="Search bills..."
                             />
                         </label>
-                        <button className="btn btn-soft btn-secondary">
-                            <Download size={18} /> Export
-                        </button>
+                        <div className="flex items-center bill-buttons gap-4">
+                            <button className="btn btn-soft btn-secondary">
+                                <Download size={18} /> Export
+                            </button>
+                            <button className="btn btn-primary" onClick={() => navigate('add')}>
+                                <Plus size={18} /> Add Bill
+                            </button>
+                        </div>
                     </div>
-                    <div className="recent-refunds mt-7 p-4 border border-base-300 rounded-2xl">
-                        <div className="header">
-                            <h4 className="text-xl font-semibold pb-1">
-                                Recent Refunds
-                            </h4>
-                            <p className="text-sm text-neutral-400 pb-7">
-                                A list of recent refunds processed by your
-                                business
-                            </p>
+                    <div className="recent-bills-table mt-7 p-4 border border-base-300 rounded-2xl">
+                        <div className="header flex items-center justify-between">
+                            <div className="left">
+                                <h4 className='text-xl font-semibold pb-1'>Recent Bills</h4>
+                                <p className='text-sm text-neutral-400 pb-7'>A list of recent bills processed by your business</p>
+                            </div>
+                            <div className="right flex items-center justify-center gap-2 cursor-pointer text-secondary">
+                                View All <ArrowRight size={18}/>
+                            </div>
                         </div>
                         <div className="overflow-x-auto border border-base-300 rounded-xl">
                             <table className="table table-zebra">
@@ -178,11 +168,10 @@ export default function Refunds() {
                                 <thead>
                                     <tr>
                                         {/* <th></th> */}
-                                        <th>ID</th>
+                                        <th>Bill No</th>
                                         <th>Date</th>
-                                        <th>Customer</th>
-                                        <th>Order ID</th>
-                                        <th>Reason</th>
+                                        <th>Vendor</th>
+                                        <th>Due Date</th>
                                         <th>Amount</th>
                                         <th>Status</th>
                                         <th>Actions</th>
@@ -191,54 +180,39 @@ export default function Refunds() {
                                 <tbody>
                                     {/* row 1 */}
                                     <tr>
-                                        <td>1</td>
-                                        <td>25th June, 2025</td>
-                                        <td>Cy Ganderton</td>
-                                        <td>OR-1010</td>
-                                        <td>Defective item</td>
-                                        <td>$95.25</td>
+                                        <td>BI-119</td>
+                                        <td>2023-04-15</td>
+                                        <td>ABC Stationaries</td>
+                                        <td>2023-04-30</td>
+                                        <td>$1250.25</td>
                                         <td>
-                                            <div className="badge bg-green-700/45 text-green-400">
-                                                Successful
-                                            </div>
+                                            <div className="badge bg-green-700/45 text-green-400">Paid</div>
                                         </td>
-                                        <th>
-                                            <Settings2 size={18} />
-                                        </th>
+                                        <th><Settings2 size={18}/></th>
                                     </tr>
                                     {/* row 2 */}
                                     <tr>
-                                        <td>1</td>
-                                        <td>25th June, 2025</td>
-                                        <td>Cy Ganderton</td>
-                                        <td>OR-1010</td>
-                                        <td>Defective item</td>
-                                        <td>$95.25</td>
+                                        <td>BI-120</td>
+                                        <td>2023-04-15</td>
+                                        <td>ABC Stationaries</td>
+                                        <td>2023-04-30</td>
+                                        <td>$1250.25</td>
                                         <td>
-                                            <div className="badge bg-red-700/45 text-red-400">
-                                                Failed
-                                            </div>
+                                            <div className="badge bg-yellow-700/45 text-yellow-400">Pending</div>
                                         </td>
-                                        <th>
-                                            <Settings2 size={18} />
-                                        </th>
+                                        <th><Settings2 size={18}/></th>
                                     </tr>
                                     {/* row 3 */}
                                     <tr>
-                                        <td>1</td>
-                                        <td>25th June, 2025</td>
-                                        <td>Cy Ganderton</td>
-                                        <td>OR-1010</td>
-                                        <td>Defective item</td>
-                                        <td>$95.25</td>
+                                        <td>BI-121</td>
+                                        <td>2023-04-15</td>
+                                        <td>ABC Stationaries</td>
+                                        <td>2023-04-30</td>
+                                        <td>$1250.25</td>
                                         <td>
-                                            <div className="badge bg-yellow-700/45 text-yellow-400">
-                                                Pending
-                                            </div>
+                                            <div className="badge bg-red-700/45 text-red-400">Overdue</div>
                                         </td>
-                                        <th>
-                                            <Settings2 size={18} />
-                                        </th>
+                                        <th><Settings2 size={18}/></th>
                                     </tr>
                                 </tbody>
                             </table>
@@ -248,4 +222,5 @@ export default function Refunds() {
             </div>
         </>
     );
+
 }

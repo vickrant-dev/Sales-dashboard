@@ -30,60 +30,76 @@ export default function AddProducts() {
 
     const handleAddProductS = async () => {
 
-        try {
-            
-            let newEntries = [];
-
-            newEntries.push({
-                product_name: addFormS.name,
-                category: addFormS.category,
-                unit_price: parseFloat(addFormS.unit_price), // Ensure it's a number
-                product_desc: addFormS.desc,
-                barcode_id: addFormS.barcode_id,
-            });    
-            
-            const { data: existingData, error: fetchError } = await supabase
-                .from('products')
-                .select('barcode_id')
-                .in('barcode_id', newEntries.map(entry => entry.barcode_id));
-
-            if (fetchError){
-                console.error('Error fetching existing barcodeID:', fetchError.message);
-                return;
+        let checkFilled = Object.values(addFormS).every(value => {
+            if(Array.isArray(value)) {
+                return value.every(item => !!item);
             }
+            return !!value;
+        })
 
-            const existingBarcode = new Set(existingData?.map(item => item.barcode_id) || []);
-
-            newEntries = newEntries.filter(entry => !existingBarcode.has(entry.barcode_id));
-
-            if(newEntries.length === 0) {
-                alert("BarcodeID already exists. No new products were added.");
-                return;
-            }
-
-            const { data, error } = await supabase
-                .from('products')
-                .insert(newEntries)
-                .select()
-
-            if (error) {
-                console.error('Error adding product:', error.message)
-                alert('Error adding entry. Ensure barcode is unique')
-            } else {
-                setInventory([...inventory, ...data]);
-                setaddFormS({
-                    name: '',
-                    category: '',
-                    desc: '',
-                    unit_price: '',
-                    barcode_id: '',
-                })
-            }
-
-
-        } catch (error) {
-            console.error('Error adding:', error.message);
+        if(!checkFilled){
+            alert("Please fill in all the blanks.");
+            return;
         }
+
+        else {
+            try {
+                
+                let newEntries = [];
+    
+                newEntries.push({
+                    product_name: addFormS.name,
+                    category: addFormS.category,
+                    unit_price: parseFloat(addFormS.unit_price), // Ensure it's a number
+                    product_desc: addFormS.desc,
+                    barcode_id: addFormS.barcode_id,
+                });    
+                
+                const { data: existingData, error: fetchError } = await supabase
+                    .from('products')
+                    .select('barcode_id')
+                    .in('barcode_id', newEntries.map(entry => entry.barcode_id));
+    
+                if (fetchError){
+                    console.error('Error fetching existing barcodeID:', fetchError.message);
+                    return;
+                }
+    
+                const existingBarcode = new Set(existingData?.map(item => item.barcode_id) || []);
+    
+                newEntries = newEntries.filter(entry => !existingBarcode.has(entry.barcode_id));
+    
+                if(newEntries.length === 0) {
+                    alert("BarcodeID already exists. No new products were added.");
+                    return;
+                }
+    
+                const { data, error } = await supabase
+                    .from('products')
+                    .insert(newEntries)
+                    .select()
+    
+                if (error) {
+                    console.error('Error adding product:', error.message)
+                    alert('Error adding entry. Ensure barcode is unique')
+                } else {
+                    setInventory([...inventory, ...data]);
+                    setaddFormS({
+                        name: '',
+                        category: '',
+                        desc: '',
+                        unit_price: '',
+                        barcode_id: '',
+                    })
+                    alert("Product Successfully Added")
+                }
+    
+    
+            } catch (error) {
+                console.error('Error adding:', error.message);
+            }
+        }
+
 
     }
 
@@ -165,7 +181,7 @@ export default function AddProducts() {
                         />
 
                         <label className="fieldset-label text-sm">
-                            BarcodeID
+                            Barcode ID
                         </label>
                         <input
                             type="text"

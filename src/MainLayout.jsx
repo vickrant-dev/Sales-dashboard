@@ -1,18 +1,22 @@
+import "./App.css";
 import { Routes, Route } from "react-router-dom"
 import { Suspense, lazy } from "react";
-import { useEffect } from "react";
-import "./App.css";
 import Sidebar from "./Components/Sidebar";
 import Navbar from "./Components/Navbar";
-import Overview from "./Components/Overview";
-import Products from "./Components/Products";
-import Analytics from "./Components/Analytics";
-import Sales from "./Components/Sales";
-import Payments from "./Components/Payments";
-import Refunds from "./Components/Refunds";
-import Invoices from "./Components/Invoices";
-import Returns from "./Components/Returns";
+import Overview from "./Components/Main/Overview";
+import Analytics from "./Components/Main/Analytics";
+import Sales from "./Components/Main/Sales";
+import Products from "./Components/Main/Products";
+import Inventory from "./Components/Main/Inventory";
+import Bills from "./Components/Transactions/Bills";
+import AddBills from "./Components/AddBills";
+import Paybills from "./Components/Transactions/Paybills";
+import Invoices from "./Components/Transactions/Invoices";
+import ReceivePayments from './Components/Transactions/ReceivePayments'
+import Refunds from "./Components/Transactions/Refunds";
+import Returns from "./Components/Transactions/Returns";
 import AddProducts from "./Components/AddProduct";
+import BarChart from "./Components/BarChart";
 
 export default function MainLayout() {
 
@@ -55,15 +59,19 @@ export default function MainLayout() {
                                 />
                                 <Route 
                                     path="/inventory" 
-                                    // element={<Inventory />} 
+                                    element={<Inventory />} 
                                 />
                                 <Route
                                     path="/bills"
-                                    element={<Payments />}
+                                    element={<Bills />}
+                                />
+                                <Route
+                                    path="/bills/add"
+                                    element={<AddBills />}                                
                                 />
                                 <Route
                                     path="/paybills"
-                                    // element={<Payments />}
+                                    element={<Paybills />}
                                 />
                                 <Route
                                     path="/invoices"
@@ -71,7 +79,7 @@ export default function MainLayout() {
                                 />
                                 <Route
                                     path="/receive-payments"
-                                    // element={<Invoices />}
+                                    element={<ReceivePayments />}
                                 />
                                 <Route 
                                     path="/refunds" 
@@ -80,6 +88,12 @@ export default function MainLayout() {
                                 <Route 
                                     path="/returns" 
                                     element={<Returns />} 
+                                />
+                                
+                                {/* Testing... */}
+                                <Route 
+                                    path="/barchart" 
+                                    element={<BarChart />} 
                                 />
                                 
                             </Routes>

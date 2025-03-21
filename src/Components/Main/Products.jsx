@@ -1,8 +1,8 @@
+import "../../App.css";
 import { ChevronDown, Pencil, Plus, Settings2, Trash } from 'lucide-react';
-import '../App.css'
 import { data, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { supabase } from '../utils/supabase';
+import { supabase } from '../../utils/supabase';
 
 export default function Products() {
 
@@ -103,9 +103,8 @@ export default function Products() {
                                         />
                                     </label>
                                 </th>
-                                <th>ID</th>
                                 <th>Name</th>
-                                <th>Cateogory</th>
+                                <th>Category</th>
                                 <th>Description</th>
                                 <th>Unit Price</th>
                                 <th>Stock</th>
@@ -123,7 +122,6 @@ export default function Products() {
                                             />
                                         </label>
                                     </th>
-                                    <td>{product.id}</td>
                                     <td>
                                         <div className="flex items-center gap-3">
                                             <div>

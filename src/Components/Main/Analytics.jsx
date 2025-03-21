@@ -1,5 +1,5 @@
 import { ArrowDownRight, ArrowRight, ArrowUpRight, DollarSign, Package, ReceiptText,  Settings,  ShoppingBag, ChartSpline, HandCoins, Send, SendHorizonal } from 'lucide-react'
-import '../App.css'
+import "../../App.css";
 
 export default function Analytics() {
 

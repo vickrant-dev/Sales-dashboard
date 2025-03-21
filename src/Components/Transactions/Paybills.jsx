@@ -1,7 +1,7 @@
 import { ArrowDownRight, ArrowRight, ArrowUpRight, DollarSign, Package, ReceiptText,  Settings,  ShoppingBag, ChartSpline, Landmark, LucideTicketCheck, LucideTicketX, RotateCcwSquareIcon, TicketSlash, Download, Settings2 } from 'lucide-react'
-import '../App.css'
+import "../../App.css";
 
-export default function Payments() {
+export default function Paybills() {
 
     return (
         <>
