@@ -1,4 +1,4 @@
-import { ChevronLeft, Save } from "lucide-react";
+import { ChevronLeft, Plus, Save, Trash } from "lucide-react";
 import "../App.css";
 import { useEffect, useState } from "react";
 import { supabase } from '../utils/supabase.js' 
@@ -7,34 +7,22 @@ import { data } from "react-router-dom";
 export default function AddBills() {
 
     const [vendors, setVendors] = useState([]);
-    const [VendorId, setVendorId] = useState(null);
+    const [vendorId, setVendorId] = useState(null);
     const [suggestions, setSuggestions] = useState([]);
     const [dropDownData, setDropDownData] = useState({});
 
     const [billForm, setBillForm] = useState({
-        vendor_name: '',
+        vendor_id: '',
         bill_date: '',
+        due_date: '',
         bill_number: '',
-        parent_barcode: '',
+        parent_barcode: '', // don't send this to db
         total_amount: '',
         amount_due: '',
         payment_status: '',
     });
 
     const [billItems, setBillItems] = useState([]);
-
-    const calculateTotal = () => {
-        
-        const totalPrice = billItems.map((bill) => {
-            return bill.quantity ? bill.quantity * bill.unit_cost : 0;
-        }).reduce((sum, billTotal) => sum + billTotal, 0);
-
-        const formattedTotalPrice = totalPrice.toLocaleString('en-US');
-        console.log(formattedTotalPrice);
-
-        billForm.total_amount = formattedTotalPrice;
-    
-    }
 
     const handleBillChange = (e) => {
 
@@ -62,13 +50,22 @@ export default function AddBills() {
         
     }
 
-    const handleBillItemsChange = (e) => {
+    const handleBillItemsChange = (e, index) => {
+        const { name, value } = e.target;
 
-        const { name, value } = e.target
-
-        setBillItems((prevBillItems) => ({ ...prevBillItems, [name]: value }));
-
-    }
+        setBillItems((prevItems) => {
+            const updatedItems = prevItems.map((item, i) => {
+                if (i === index) {
+                    return {
+                        ...item,
+                        [name]: value,
+                    };
+                }
+                return item;
+            });
+            return updatedItems;
+        }); // ⭐
+    };
 
     const handleParentBarcode = (e) => {
 
@@ -83,9 +80,8 @@ export default function AddBills() {
         const qty = pro_qty[1];
 
         fetchProductsData(barcodeID, qty);
-        calculateTotal();
 
-    }    
+    }
 
     const fetchProductsData  = async (barcodeID, qty) => {
         try {
@@ -107,6 +103,7 @@ export default function AddBills() {
                             quantity: qty,
                         },
                     ]);
+                    setBillForm((prevBillForm) => ({...prevBillForm, payment_status: 'Paid'}));
                 } else {
                     console.log(
                         "Product not found for barcode:",
@@ -121,21 +118,52 @@ export default function AddBills() {
             alert(error.message);
             return;
         }
+    } // filling bill items based on barcode
+
+    const addRow = () => {
+        setBillItems((prevBillItems) => [...prevBillItems, {}]);
     }
 
-    const handleSelectDropDown = (field, vendorName, index) => {
+    const deleteBillRow = (index) => {
+        setBillItems((prevBillItems) => {
+            return prevBillItems.filter((_,i) => i !== index);
+        });
+    }
 
-        setBillForm((prevBillForm) => ({ ...prevBillForm, [field]: vendorName }));
+    useEffect(() => {
+        const calculatedTotal = Array.isArray(billItems) ? billItems
+            .reduce((sum, bill) => {
+                const quantity = parseFloat(bill.quantity) || 0;
+                const unitCost = parseFloat(bill.unit_cost) || 0;
+                return sum + quantity * unitCost;
+            }, 0)
+            .toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            })
+        : '0.00';
 
-        const selectedVendor = vendors.find(vendor => vendor.vendor_name === vendorName);
+        setBillForm((prevBillForm) => ({...prevBillForm, total_amount: calculatedTotal}));
+        console.log(billForm);
+    }, [billItems])
 
-        if (selectedVendor) {
-            setVendorId(selectedVendor.id);
+    const handleSaveBill = () => {
+        if(isBillFormFilledP(billForm)) {
+            console.log('Saved bill: ', billForm);
         }
-        else {
-            console.warn('Vendor not found:', vendorName);
+        else{
+            alert('Please fill in all required fields');
         }
+    }
 
+    const isBillFormFilledP = (form) => {
+        return (
+            form.vendor_id &&
+            form.bill_date && 
+            form.bill_number &&
+            form.total_amount &&
+            form.payment_status
+        )
     }
 
     useEffect(() => {
@@ -156,7 +184,26 @@ export default function AddBills() {
             }
         };
         fetchVendors();
-    }, []); // Fetching vendors   
+    }, []); // Fetching vendors
+
+    const handleSelectDropDown = (field, vendorName, index) => {
+
+        setBillForm((prevBillForm) => ({ ...prevBillForm, [field]: vendorName }));
+
+        const selectedVendor = vendors.find(vendor => vendor.vendor_name === vendorName);
+
+        if (selectedVendor) {
+            setVendorId(selectedVendor.id);
+        }
+        else {
+            console.warn('Vendor not found:', vendorName);
+        }
+
+    }
+
+    useEffect(() => {
+        setBillForm((prevBillForm) => ({...prevBillForm, vendor_id: vendorId}));
+    }, [vendorId]);
 
     return (
         <>
@@ -204,7 +251,9 @@ export default function AddBills() {
                                                     onChange={handleBillChange}
                                                     onBlur={() =>
                                                         setTimeout(() => {
-                                                            setSuggestions(null);
+                                                            setSuggestions(
+                                                                null
+                                                            );
                                                         }, 100)
                                                     }
                                                     className="input mb-3 w-full"
@@ -216,26 +265,34 @@ export default function AddBills() {
                                                         ?.length > 0 && (
                                                         <div className="relative">
                                                             <ul className="absolute dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                                                                {dropDownData[field]
+                                                                {dropDownData[
+                                                                    field
+                                                                ]
                                                                     .slice(0, 5)
                                                                     .map(
                                                                         (
                                                                             item,
                                                                             index
                                                                         ) => (
-                                                                            <li className=""
+                                                                            <li
+                                                                                className=""
                                                                                 key={
                                                                                     index
                                                                                 }
                                                                                 onClick={() =>
                                                                                     handleSelectDropDown(
                                                                                         field,
-                                                                                        item, index
+                                                                                        item,
+                                                                                        index
                                                                                     )
                                                                                 }
                                                                             >
                                                                                 {
-                                                                                    <a className="py-3">{item}</a>
+                                                                                    <a className="py-3">
+                                                                                        {
+                                                                                            item
+                                                                                        }
+                                                                                    </a>
                                                                                 }
                                                                             </li>
                                                                         )
@@ -290,9 +347,19 @@ export default function AddBills() {
                                     </div>
                                 </div>
 
-                                <label className="fieldset-label text-sm">
-                                    Bill Items
-                                </label>
+                                <div className="bill-items-add-btn flex items-center justify-between">
+                                    <label className="fieldset-label text-sm">
+                                        Bill Items
+                                    </label>
+                                    <div className="add-btn">
+                                        <button
+                                            className="btn btn-soft btn-primary"
+                                            onClick={addRow}
+                                        >
+                                            <Plus size={18} /> Add Item
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
                                     <table class="table">
                                         <thead>
@@ -302,66 +369,109 @@ export default function AddBills() {
                                                 <th>Quantity</th>
                                                 <th>Unit Cost</th>
                                                 <th>Total</th>
+                                                <th><Trash className="text-red-500" size={18} /></th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {billItems.length > 0 && billItems.map((bill, index) => (
-                                                <tr key={index}>
-                                                    <td>
-                                                        <input
-                                                            type="text"
-                                                            name="product_name"
-                                                            value={
-                                                                bill.product_name ? bill.product_name : ''
-                                                            }
-                                                            placeholder="Product name"
-                                                            className="input"
-                                                            onChange={(e) => handleBillItemsChange(e, index)}
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <input
-                                                            type="text"
-                                                            name="product_desc"
-                                                            value={
-                                                                bill.product_desc ? bill.product_desc : ''
-                                                            }
-                                                            placeholder="Product Description"
-                                                            className="input"
-                                                            onChange={(e) => handleBillItemsChange(e, index)}
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <input
-                                                            type="text"
-                                                            name="quantity"
-                                                            value={
-                                                                bill.quantity ? bill.quantity : ''
-                                                            }
-                                                            placeholder="Qty"
-                                                            className="input"
-                                                            onChange={(e) => handleBillItemsChange(e, index)}
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <input
-                                                            type="text"
-                                                            name="unit_cost"
-                                                            value={
-                                                                bill.unit_cost ? bill.unit_cost : ''
-                                                            }
-                                                            placeholder="Unit cost"
-                                                            className="input"
-                                                            onChange={(e) => handleBillItemsChange(e, index)}
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        {bill.quantity ? bill.quantity *
-                                                            bill.unit_cost : 0}
-                                                    </td>
-                                                </tr>
-                                            ))
-                                            }
+                                            {billItems.length > 0 &&
+                                                billItems.map((bill, index) => (
+                                                    <tr key={index}>
+                                                        <td>
+                                                            <input
+                                                                type="text"
+                                                                name="product_name"
+                                                                value={
+                                                                    bill.product_name
+                                                                        ? bill.product_name
+                                                                        : ""
+                                                                }
+                                                                placeholder="Product name"
+                                                                className="input"
+                                                                onChange={(e) =>
+                                                                    handleBillItemsChange(
+                                                                        e,
+                                                                        index
+                                                                    )
+                                                                }
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <input
+                                                                type="text"
+                                                                name="product_desc"
+                                                                value={
+                                                                    bill.product_desc
+                                                                        ? bill.product_desc
+                                                                        : ""
+                                                                }
+                                                                placeholder="Product Description"
+                                                                className="input"
+                                                                onChange={(e) =>
+                                                                    handleBillItemsChange(
+                                                                        e,
+                                                                        index
+                                                                    )
+                                                                }
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <input
+                                                                type="text"
+                                                                name="quantity"
+                                                                value={
+                                                                    bill.quantity
+                                                                        ? bill.quantity
+                                                                        : ""
+                                                                }
+                                                                placeholder="Qty"
+                                                                className="input"
+                                                                onChange={(e) =>
+                                                                    handleBillItemsChange(
+                                                                        e,
+                                                                        index
+                                                                    )
+                                                                }
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <input
+                                                                type="text"
+                                                                name="unit_cost"
+                                                                value={
+                                                                    bill.unit_cost
+                                                                        ? bill.unit_cost
+                                                                        : ""
+                                                                }
+                                                                placeholder="Unit cost"
+                                                                className="input"
+                                                                onChange={(e) =>
+                                                                    handleBillItemsChange(
+                                                                        e,
+                                                                        index
+                                                                    )
+                                                                }
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            {bill.quantity &&
+                                                            bill.unit_cost
+                                                                ? (
+                                                                      bill.quantity *
+                                                                      bill.unit_cost
+                                                                  ).toLocaleString(
+                                                                      "en-US",
+                                                                      {
+                                                                          minimumFractionDigits: 2,
+                                                                          maximumFractionDigits: 2,
+                                                                      }
+                                                                  )
+                                                                : "0.00"}
+                                                        </td>
+                                                        <td>
+                                                            <Trash className="text-red-500 cursor-pointer" onClick={() => deleteBillRow(index)} size={18} />
+                                                        </td>
+                                                    </tr>
+                                                ))}
                                         </tbody>
                                     </table>
                                 </div>
@@ -369,11 +479,57 @@ export default function AddBills() {
                                 <div className="bill-amount flex flex-col items-end justify-end gap-3 mt-3">
                                     <div className="subtotal flex text-sm gap-26.5">
                                         <p>Subtotal: </p>
-                                        <p>${billForm.total_amount}</p>
+                                        <p>
+                                            ${Array.isArray(billItems)
+                                                ? billItems
+                                                      .reduce((sum, bill) => {
+                                                          const quantity =
+                                                              parseFloat(
+                                                                  bill.quantity
+                                                              ) || 0;
+                                                          const unitCost =
+                                                              parseFloat(
+                                                                  bill.unit_cost
+                                                              ) || 0;
+                                                          return (
+                                                              sum +
+                                                              quantity *
+                                                                  unitCost
+                                                          );
+                                                      }, 0)
+                                                      .toLocaleString("en-US", {
+                                                          minimumFractionDigits: 2,
+                                                          maximumFractionDigits: 2,
+                                                      })
+                                                : "0.00"}
+                                        </p>
                                     </div>
                                     <div className="total flex text-lg gap-27">
                                         <p>Total:</p>
-                                        <p>${billForm.total_amount}</p>
+                                        <p>
+                                            ${Array.isArray(billItems)
+                                                ? billItems
+                                                      .reduce((sum, bill) => {
+                                                          const quantity =
+                                                              parseFloat(
+                                                                  bill.quantity
+                                                              ) || 0;
+                                                          const unitCost =
+                                                              parseFloat(
+                                                                  bill.unit_cost
+                                                              ) || 0;
+                                                          return (
+                                                              sum +
+                                                              quantity *
+                                                                  unitCost
+                                                          );
+                                                      }, 0)
+                                                      .toLocaleString("en-US", {
+                                                          minimumFractionDigits: 2,
+                                                          maximumFractionDigits: 2,
+                                                      })
+                                                : "$0.00"}
+                                        </p>
                                     </div>
                                 </div>
 
@@ -386,7 +542,7 @@ export default function AddBills() {
                                     </button>
                                     <button
                                         className="btn btn-primary"
-                                        // onClick={handleSaveBillPaid}
+                                        onClick={handleSaveBill}
                                     >
                                         Save Bill
                                     </button>
